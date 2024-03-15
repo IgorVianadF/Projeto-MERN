@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const connectDB = require('./src/database/db')
 const userRoute = require('./src/routes/user.route')
-
 const port = 3000
 
 connectDB()
