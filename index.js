@@ -6,7 +6,7 @@ const port = 3000
 
 connectDB()
 app.use(express.json())
-app.use('/',userRoute)
+app.use('/user',userRoute)
 
 app.listen(port, ()=>console.log(`Servidor aberto na porta: ${port}`))
  
