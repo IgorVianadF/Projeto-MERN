@@ -1,8 +1,7 @@
-const userService = require('../services/user.service')
-const mongoose = require("mongoose")
+import userService from "../services/user.service.js"
 
 const create = async (req, res)=>{
-    const {name, username, email, password, avatar, background} = req.body
+    try{const {name, username, email, password, avatar, background} = req.body
 
     if(!name||!username||!email||!password||!avatar||!background){
         res.status(400).send({message:"You must submit all fields for the registration!"})
@@ -25,31 +24,59 @@ const create = async (req, res)=>{
             background,
         },
     })
+}catch(err){
+    res.status(500).send({message: err.message})
+}
 }
 
 const findAll = async (req, res)=>{
-    const users = await userService.findAllService() 
+    try{const users = await userService.findAllService() 
 
     if(users.length===0){
         return  res.status(400).send({message: "Não há usuários registrados"})
     }
 
-    res.send(users)
+    res.send(users)}catch(err){
+    res.status(500).send({message: err.message})
+    }
 }
 
 const findById = async (req, res)=>{
-    const id = req.params.id
-
-    if(!mongoose.Types.ObjectId.isValid(id)){
-        return res.status(400).send({message: "ID fornecido é inválido"})
+try {const user = req.user
+    res.status(200).send(user)}catch(err){
+    res.status(500).send({message: err.message})
     }
-
-    const user = await userService.findByIdService(id)
-
-    if(!user){
-        return res.status(400).send({message: "Usuário não encontrado"})
-    }
-    res.status(200).send(user)
 }
 
-module.exports = {create, findAll, findById}; 
+const update = async (req, res)=>{
+    try {const {name, username, email, password, avatar, background} = req.body
+
+    if(!name&&!username&&!email&&!password&&!avatar&&!background){
+        res.status(400).send({message:"You must submit at least one field for update!"})
+    }
+    const {id} = req
+    await userService.updateService(
+        id,
+        name, 
+        username, 
+        email, 
+        password, 
+        avatar, 
+        background
+    )
+
+    res.status(201).send({message: "User succesfully updated!"})
+  } catch(err){
+    res.status(500).send({message: err.message})
+  }
+}
+
+const deleteUser = async (req, res)=>{
+    try {const {id} = req
+    await userService.deleteService(id)
+    return res.status(200).send({message: "Usuário deletado com sucesso!"})
+    } catch(err){
+    res.status(500).send({message: err.message})
+    }
+}
+export default {create, findAll, findById, update, deleteUser}; 

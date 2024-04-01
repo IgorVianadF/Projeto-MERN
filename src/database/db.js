@@ -1,5 +1,6 @@
-const mongoose = require('mongoose')
-require('dotenv').config()
+import mongoose from 'mongoose'
+import dotenv from 'dotenv'
+dotenv.config()
 
 const connectDB=()=>{
     console.log('Wait, connecting to database...')
@@ -9,4 +10,4 @@ const connectDB=()=>{
     ).then(()=>console.log('MongoDB Atlas Connected!')).catch((error)=>console.log(error))
 }
 
-module.exports=connectDB
+export default connectDB
